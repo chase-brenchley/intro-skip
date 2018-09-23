@@ -1,0 +1,10 @@
+{
+    "manifest_version": 2,
+    "name": "youtube intro skipper",
+    "description": "skips intos on youtube videos",
+    "version": "1.0.0",
+    "permissions": ["webNavigation", "webRequest", "https://www.youtube.com/*", "webRequestBlocking"],
+    "background": {
+        "scripts": ["background.js"]
+    }
+}
