@@ -9,34 +9,32 @@
 // 	}
 // });
 
-// Inject an <a> at somewhere in the youtube html
+// function wait(){
+// 	// I need to wait for the right click menu to show up
+// 	// This finds the right click menu 
+// 	menu = document.getElementsByClassName("ytp-popup ytp-contextmenu");
 
-// $("body").append("<a id='extension_click' class='yt-simple-endpoint style-scope yt-formatted-string' href='/watch?v=jB1XvMyEBNA&t=91s'></a>");
-// function markIntro(){
-// 	ytplayer = document.getElementById("movie_player");
-// 	time = ytplayer.getCurrentTime();
-// 	alert(time);
-// }
+// 	// If menu.length is 1, then the element exist
+// 	if (menu.length === 1){
+// 		// document.getElementsByClassName("ytp-panel-menu")[1].innerHTML = `<div class="ytp-menuitem" aria-haspopup="false" role="menuitem" tabindex="0" data-visual-id="8" id="intro-butt"><div class="ytp-menuitem-label">Mark as end of intro</div><div class="ytp-menuitem-content"></div></div>` + document.getElementsByClassName("ytp-panel-menu")[1].innerHTML;
+// 		// link = document.getElementById('intro-butt');
+// 		// link.addEventListener('click', function(){
+// 		// 	ytplayer = document.getElementById("movie_player");
+// 		// 	time = ytplayer.getCurrentTime();
+// 		// 	alert(time);
+// 		// });
+// 		return;
+// 	} else {
+// 		setTimeout(function(){
+// 			wait();
+// 		}, 500);
+// 	}
 
-function wait(){
-	// I need to wait for the right click menu to show up
-	// This finds the right click menu 
-	menu = document.getElementsByClassName("ytp-popup ytp-contextmenu");
+// }wait();
 
-	// If menu.length is 1, then the element exist
-	if (menu.length === 1){
-		document.getElementsByClassName("ytp-panel-menu")[1].innerHTML = `<div class="ytp-menuitem" aria-haspopup="false" role="menuitem" tabindex="0" data-visual-id="8" id="intro-butt"><div class="ytp-menuitem-label">Mark as end of intro</div><div class="ytp-menuitem-content"></div></div>` + document.getElementsByClassName("ytp-panel-menu")[1].innerHTML;
-		link = document.getElementById('intro-butt');
-		link.addEventListener('click', function(){
-			ytplayer = document.getElementById("movie_player");
-			time = ytplayer.getCurrentTime();
-			alert(time);
-		});
-		return;
-	} else {
-		setTimeout(function(){
-			wait();
-		}, 500);
-	}
-}
-wait();
+var s = document.createElement('script');
+s.src = chrome.extension.getURL('script.js');
+s.onload = function () {
+	this.remove();
+};
+(document.head || document.documentElement).appendChild(s);
