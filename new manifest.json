@@ -1,0 +1,25 @@
+{
+    "manifest_version": 2,
+    "name": "RaterFox",
+    "description": "The most popular movies and TV shows in your   default tab. Includes ratings, summaries and the ability to watch trailers.",
+    "version": "1",
+    "author": "Jake Prins",
+    "permissions": ["activeTab", "webNavigation", "declarativeContent"],
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.youtube.com/watch*"
+            ],
+        "run_at": "document_idle",
+            "js": ["jquery-3.3.1.min.js", "content.js"]
+        }
+    ],
+    "page_action": {
+    "default_popup" : "popup.html",
+    "default_icon" : "tab-icon.jpg"
+    },
+    // "background": {
+    // "scripts": ["background.js"]
+    // },
+    "web_accessible_resources": ["script.js"]
+}

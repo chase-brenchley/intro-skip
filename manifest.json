@@ -3,8 +3,18 @@
     "name": "youtube intro skipper",
     "description": "skips intos on youtube videos",
     "version": "1.0.0",
-    "permissions": ["webNavigation", "webRequest", "https://www.youtube.com/*", "webRequestBlocking", "http://127.0.0.1:5000/*"],
-    "background": {
-        "scripts": ["background.js"]
-    }
+    "permissions": ["webNavigation", "webRequest", "https://www.youtube.com/*", "webRequestBlocking", "http://127.0.0.1:5000/*", "declarativeContent", "activeTab"],
+    // "background": {
+    //     "scripts": ["background.js"]
+    // },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.youtube.com/watch*"
+            ],
+            "run_at": "document_idle",
+            "js": ["content.js"]
+        }
+    ],
+    "web_accessible_resources": ["script.js"]
 }
