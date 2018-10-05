@@ -1,4 +1,31 @@
-var skip = setInterval(function(){
+api_call = new XMLHttpRequest();
+api_call.onreadystatechange = handleStateChange;
+url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=";
+// url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=jasflkdioejf";
+// api_call.open("GET", url, true);
+// api_call.send();
+var skip_times = []
+
+function handleStateChange(){
+	if (api_call.readyState == 4 && api_call.status == 200){
+		console.log("Ready to parse " + api_call.responseText);
+		response = JSON.parse(api_call.responseText);
+		for (var skip of response){
+			skip_times.push({start: skip.start_t, end: skip.end_t});
+		}
+	}
+}
+var getVideoId = setInterval(function(){
+	container = document.getElementsByClassName("style-scope ytd-page-manager hide-skeleton");
+	if(container){
+		url = url+container[0].getAttribute("video-id");
+		api_call.open("GET", url, true);
+		api_call.send();
+		clearInterval(getVideoId);
+	}
+}, 500);
+
+var addSkipButton = setInterval(function(){
 	console.log("In the interval");
 	container = document.getElementById("movie_player")
 	if(container){
@@ -22,27 +49,10 @@ var skip = setInterval(function(){
 		skipDiv.appendChild(butt);
 
 		container.appendChild(skipDiv);
-		clearInterval(skip);
+		clearInterval(addSkipButton);
 		return;
 	}
 }, 500);
-
-api_call = new XMLHttpRequest();
-api_call.onreadystatechange = handleStateChange;
-url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=jasflkdioejf";
-api_call.open("GET", url, true);
-api_call.send();
-var skip_times = []
-
-function handleStateChange(){
-	if (api_call.readyState == 4 && api_call.status == 200){
-		console.log("Ready to parse " + api_call.responseText);
-		response = JSON.parse(api_call.responseText);
-		for (var skip of response){
-			skip_times.push({start: skip.start_t, end: skip.end_t});
-		}
-	}
-}
 
 var skipper = setInterval(function (){
 	// console.log("In this one");
