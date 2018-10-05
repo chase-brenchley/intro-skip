@@ -27,84 +27,91 @@ var skip = setInterval(function(){
 	}
 }, 500);
 
-// assuming skip times come in order
-skip_times = [
-	{start: 60, end: 600},
-	{start: 1200, end: 2036}, 
-]
+api_call = new XMLHttpRequest();
+api_call.onreadystatechange = handleStateChange;
+url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=jasflkdioejf";
+api_call.open("GET", url, true);
+api_call.send();
+var skip_times = []
+
+function handleStateChange(){
+	if (api_call.readyState == 4 && api_call.status == 200){
+		console.log("Ready to parse " + api_call.responseText);
+		response = JSON.parse(api_call.responseText);
+		for (var skip of response){
+			skip_times.push({start: skip.start_t, end: skip.end_t});
+		}
+	}
+}
 
 var skipper = setInterval(function (){
 	// console.log("In this one");
 	ytplayer = document.getElementById("movie_player");
 	curTime = ytplayer.getCurrentTime();
-	for(var time of skip_times){
-		if(curTime >= time.start && curTime <= time.end){
-			foo = document.getElementById('skip_button')
-			foo.style = "display: block; opacity 1;";
-			foo.addEventListener('click', function(){
-				ytplayer.seekTo(time.end, true);
-				foo.style = "display: none; opacity 1;";
-			}, once=true);
-			break;
-		} else {
-			document.getElementById('skip_button').style = "display: none; opacity 1;";
+		for(var time of skip_times){
+			if(curTime >= time.start && curTime <= time.end){
+				skip_butt = document.getElementById('skip_button')
+				skip_butt.style = "display: block; opacity 1;";
+				skip_butt.addEventListener('click', function(){
+					ytplayer.seekTo(time.end, true);
+					skip_butt.style = "display: none; opacity 1;";
+				}, once=true);
+				break;
+			} else {
+				document.getElementById('skip_button').style = "display: none; opacity 1;";
+			}
 		}
-	}
 }, 1000);
 
 var markVideoMenuButton = setInterval(function(){
 	contextMenu = document.getElementsByClassName("ytp-popup ytp-contextmenu");
 	console.log("Trying to place the button");
 	if (contextMenu.length === 1){
-			console.log("The menu exists! Placing button");
+		console.log("The menu exists! Placing button");
 
+		ytplayer = document.getElementById("movie_player");
+
+		var startTime;
+
+		var outer = document.createElement('div');
+		outer.classList = "ytp-menuitem";
+		outer.id = "context-butt";
+		outer.addEventListener('click', function(){
 			ytplayer = document.getElementById("movie_player");
+			if (!startTime){
+					startTime = ytplayer.getCurrentTime();
+					// alert("Marking " + startTime + " time as start of non-content")
+					inner1.innerText = "Mark as end";
+			}
+			else{
+					endTime = ytplayer.getCurrentTime();
+					// alert("Marking " + endTime + " time as end of non-content")
 
-			var startTime;
+					// Can now send both times to the server
+					alert("Sending to server");
 
-			var outer = document.createElement('div');
-			outer.classList = "ytp-menuitem";
-			outer.id = "context-butt";
-			// outer.addEventListener('mouseenter', function(){
-			//      ytplayer = document.getElementById("movie_player");
-			//      inner2.innerText = parseInt(ytplayer.getCurrentTime());
-			// })
-			outer.addEventListener('click', function(){
-					ytplayer = document.getElementById("movie_player");
-					if (!startTime){
-							startTime = ytplayer.getCurrentTime();
-							// alert("Marking " + startTime + " time as start of non-content")
-							inner1.innerText = "Mark as end";
-					}
-					else{
-							endTime = ytplayer.getCurrentTime();
-							// alert("Marking " + endTime + " time as end of non-content")
+					startTime = endTime = null;
+					inner1.innerText = "Mark as start of non-content";
+				}
+			inner2.innerText = "";
+		});
 
-							// Can now send both times to the server
-							alert("Sending to server");
+		var inner1 = document.createElement('div');
+		inner1.classList = "ytp-menuitem-label";
+		inner1.innerText = "Mark as start of 'non-content'";
 
-							startTime = endTime = null;
-							inner1.innerText = "Mark as start of non-content";
-
-}                       inner2.innerText = "";
-			});
-
-			var inner1 = document.createElement('div');
-			inner1.classList = "ytp-menuitem-label";
-			inner1.innerText = "Mark as start of 'non-content'";
-
-			// <div class="ytp-menuitem-content"></div>
-			var inner2 = document.createElement('div');
-			inner2.classList = "ytp-menuitem-content";
-			setInterval(function(){inner2.innerText = parseInt(ytplayer.getCurrentTime())}, 500);
+		// <div class="ytp-menuitem-content"></div>
+		var inner2 = document.createElement('div');
+		inner2.classList = "ytp-menuitem-content";
+		setInterval(function(){inner2.innerText = parseInt(ytplayer.getCurrentTime())}, 500);
 
 
-			outer.appendChild(inner1);
-			outer.appendChild(inner2);
+		outer.appendChild(inner1);
+		outer.appendChild(inner2);
 
-			var context = document.getElementsByClassName("ytp-panel-menu")[1]
-			context.insertBefore(outer, context.childNodes[0]);
+		var context = document.getElementsByClassName("ytp-panel-menu")[1]
+		context.insertBefore(outer, context.childNodes[0]);
 
-			clearInterval(markVideoMenuButton);
+		clearInterval(markVideoMenuButton);
 	}
 }, 500);

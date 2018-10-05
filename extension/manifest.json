@@ -3,7 +3,7 @@
     "name": "youtube intro skipper",
     "description": "skips intos on youtube videos",
     "version": "1.0.0",
-    "permissions": ["identity", "identity.email", "webNavigation", "webRequest", "https://www.youtube.com/*", "webRequestBlocking", "http://127.0.0.1:5000/*", "declarativeContent", "activeTab"],
+    "permissions": ["identity", "identity.email", "webNavigation", "webRequest", "https://www.youtube.com/*", "webRequestBlocking", "https://blooming-anchorage-23601.herokuapp.com/*", "http://blooming-anchorage-23601.herokuapp.com/*", "declarativeContent", "activeTab"],
     "background": {
         "scripts": ["background.js"]
     },
