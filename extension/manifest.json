@@ -1,9 +1,9 @@
 {
     "manifest_version": 2,
     "name": "youtube intro skipper",
-    "description": "skips intos on youtube videos",
+    "description": "Skips portions of 'non-content' within youtube videos.",
     "version": "1.0.0",
-    "permissions": ["identity", "identity.email", "webNavigation", "webRequest", "https://www.youtube.com/*", "webRequestBlocking", "https://blooming-anchorage-23601.herokuapp.com/*", "http://blooming-anchorage-23601.herokuapp.com/*", "declarativeContent", "activeTab"],
+    "permissions": ["identity", "identity.email", "https://www.youtube.com/*", "https://blooming-anchorage-23601.herokuapp.com/*", "declarativeContent"],
     "background": {
         "scripts": ["background.js"]
     },
