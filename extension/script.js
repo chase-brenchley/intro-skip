@@ -19,7 +19,7 @@ function handleStateChange(){
 
 var getVideoId = setInterval(function(){
 	container = document.getElementsByClassName("style-scope ytd-page-manager hide-skeleton");
-	if(container){
+	if(container.length > 0){
 		videoId = container[0].getAttribute("video-id");
 		url = url+videoId;
 		api_call.open("GET", url, true);
