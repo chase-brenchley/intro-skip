@@ -1,6 +1,7 @@
 api_call = new XMLHttpRequest();
 api_call.onreadystatechange = handleStateChange;
 url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=";
+var videoId;
 // url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=jasflkdioejf";
 // api_call.open("GET", url, true);
 // api_call.send();
@@ -15,10 +16,12 @@ function handleStateChange(){
 		}
 	}
 }
+
 var getVideoId = setInterval(function(){
 	container = document.getElementsByClassName("style-scope ytd-page-manager hide-skeleton");
 	if(container){
-		url = url+container[0].getAttribute("video-id");
+		videoId = container[0].getAttribute("video-id");
+		url = url+videoId;
 		api_call.open("GET", url, true);
 		api_call.send();
 		clearInterval(getVideoId);
@@ -98,7 +101,11 @@ var markVideoMenuButton = setInterval(function(){
 					// alert("Marking " + endTime + " time as end of non-content")
 
 					// Can now send both times to the server
-					alert("Sending to server");
+					alert("Sending to server\nVideo ID: " + videoId + "\nStart: " + startTime + "\n End: " + endTime);
+					postToAPI = new XMLHttpRequest();
+					postToAPI.open("POST", "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips", true);
+					postToAPI.setRequestHeader("Content-Type", "application/json");
+					postToAPI.send(JSON.stringify({"start_time": startTime, "end_time": endTime, "user": "test", "yt_id": videoId}));
 
 					startTime = endTime = null;
 					inner1.innerText = "Mark as start of non-content";
