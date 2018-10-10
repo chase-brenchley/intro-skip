@@ -75,25 +75,6 @@ var skipper = setInterval(function (){
 			}
 		}
 	}
-	// setTimeout(function(){
-	// 	ytplayer = document.getElementById("movie_player");
-	// }, 3000);
-	// if(ytplayer && typeof ytplayer.getCurrentTime == 'function'){
-	// 	curTime = ytplayer.getCurrentTime();
-	// 	for(var time of skip_times){
-	// 		if(curTime >= time.start && curTime <= time.end){
-	// 			skip_butt = document.getElementById('skip_button')
-	// 			skip_butt.style = "display: block; opacity 1;";
-	// 			skip_butt.addEventListener('click', function(){
-	// 				ytplayer.seekTo(time.end, true);
-	// 				skip_butt.style = "display: none; opacity 1;";
-	// 			}, once=true);
-	// 			break;
-	// 		} else {
-	// 			document.getElementById('skip_button').style = "display: none; opacity 1;";
-	// 		}
-	// 	}
-	// }
 }, 500);
 
 var markVideoMenuButton = setInterval(function(){
