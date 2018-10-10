@@ -29,7 +29,7 @@ var getVideoId = setInterval(function(){
 }, 500);
 
 var addSkipButton = setInterval(function(){
-	console.log("In the interval");
+	// console.log("In the interval");
 	container = document.getElementById("movie_player")
 	if(container){
 		var skipDiv = document.createElement("div");
@@ -58,15 +58,15 @@ var addSkipButton = setInterval(function(){
 }, 500);
 
 var skipper = setInterval(function (){
-	// console.log("In this one");
-	ytplayer = document.getElementById("movie_player");
-	curTime = ytplayer.getCurrentTime();
+	// // console.log("In this one");
+	if(typeof document.getElementById("movie_player").getCurrentTime == 'function'){
+		curTime = document.getElementById("movie_player").getCurrentTime();
 		for(var time of skip_times){
 			if(curTime >= time.start && curTime <= time.end){
 				skip_butt = document.getElementById('skip_button')
 				skip_butt.style = "display: block; opacity 1;";
 				skip_butt.addEventListener('click', function(){
-					ytplayer.seekTo(time.end, true);
+					document.getElementById("movie_player").seekTo(time.end, true);
 					skip_butt.style = "display: none; opacity 1;";
 				}, once=true);
 				break;
@@ -74,11 +74,31 @@ var skipper = setInterval(function (){
 				document.getElementById('skip_button').style = "display: none; opacity 1;";
 			}
 		}
-}, 1000);
+	}
+	// setTimeout(function(){
+	// 	ytplayer = document.getElementById("movie_player");
+	// }, 3000);
+	// if(ytplayer && typeof ytplayer.getCurrentTime == 'function'){
+	// 	curTime = ytplayer.getCurrentTime();
+	// 	for(var time of skip_times){
+	// 		if(curTime >= time.start && curTime <= time.end){
+	// 			skip_butt = document.getElementById('skip_button')
+	// 			skip_butt.style = "display: block; opacity 1;";
+	// 			skip_butt.addEventListener('click', function(){
+	// 				ytplayer.seekTo(time.end, true);
+	// 				skip_butt.style = "display: none; opacity 1;";
+	// 			}, once=true);
+	// 			break;
+	// 		} else {
+	// 			document.getElementById('skip_button').style = "display: none; opacity 1;";
+	// 		}
+	// 	}
+	// }
+}, 500);
 
 var markVideoMenuButton = setInterval(function(){
 	contextMenu = document.getElementsByClassName("ytp-popup ytp-contextmenu");
-	console.log("Trying to place the button");
+	// console.log("Trying to place the button");
 	if (contextMenu.length === 1){
 		console.log("The menu exists! Placing button");
 
