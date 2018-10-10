@@ -91,7 +91,7 @@ var markVideoMenuButton = setInterval(function(){
 		outer.id = "context-butt";
 		outer.addEventListener('click', function(){
 			ytplayer = document.getElementById("movie_player");
-			if (!startTime){
+			if (startTime == null){
 					startTime = ytplayer.getCurrentTime();
 					// alert("Marking " + startTime + " time as start of non-content")
 					inner1.innerText = "Mark as end";
