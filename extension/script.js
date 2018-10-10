@@ -101,11 +101,13 @@ var markVideoMenuButton = setInterval(function(){
 					// alert("Marking " + endTime + " time as end of non-content")
 
 					// Can now send both times to the server
-					alert("Sending to server\nVideo ID: " + videoId + "\nStart: " + startTime + "\n End: " + endTime);
-					postToAPI = new XMLHttpRequest();
-					postToAPI.open("POST", "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips", true);
-					postToAPI.setRequestHeader("Content-Type", "application/json");
-					postToAPI.send(JSON.stringify({"start_time": startTime, "end_time": endTime, "user": "test", "yt_id": videoId}));
+					confirm("Sending to server\nVideo ID: " + videoId + "\nStart: " + startTime + "\n End: " + endTime);
+					if(confirm == true){
+						postToAPI = new XMLHttpRequest();
+						postToAPI.open("POST", "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips", true);
+						postToAPI.setRequestHeader("Content-Type", "application/json");
+						postToAPI.send(JSON.stringify({"start_time": startTime, "end_time": endTime, "user": "test", "yt_id": videoId}));
+					}
 
 					startTime = endTime = null;
 					inner1.innerText = "Mark as start of non-content";
