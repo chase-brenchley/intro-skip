@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "Youtube into/ad skipper",
     "description": "Skips portions of 'non-content' within youtube videos.",
-    "version": "0.1.4",
+    "version": "0.1.5",
     "permissions": ["identity", "identity.email", "https://www.youtube.com/*", "https://blooming-anchorage-23601.herokuapp.com/*", "declarativeContent"],
     "background": {
         "scripts": ["background.js"]
