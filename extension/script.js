@@ -1,6 +1,6 @@
 api_call = new XMLHttpRequest();
 api_call.onreadystatechange = handleStateChange;
-url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=";
+// url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=";
 var videoId;
 // url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=jasflkdioejf";
 // api_call.open("GET", url, true);
@@ -8,6 +8,7 @@ var videoId;
 var skip_times = []
 
 function handleStateChange(){
+	skip_times = [];
 	if (api_call.readyState == 4 && api_call.status == 200){
 		console.log("Ready to parse " + api_call.responseText);
 		response = JSON.parse(api_call.responseText);
@@ -17,16 +18,20 @@ function handleStateChange(){
 	}
 }
 
-var getVideoId = setInterval(function(){
+function getVideoIdFunc(){
 	container = document.getElementsByClassName("style-scope ytd-page-manager hide-skeleton");
-	if(container.length > 0){
+	if(container.length > 0 && container[0].getAttribute("video-id")!= videoId){		
 		videoId = container[0].getAttribute("video-id");
-		url = url+videoId;
+		url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=" + videoId;
+		// url = url+videoId;
 		api_call.open("GET", url, true);
 		api_call.send();
+		console.log("This video is " + videoId);
 		clearInterval(getVideoId);
 	}
-}, 500);
+}
+
+var getVideoId = setInterval(getVideoIdFunc, 500);
 
 var addSkipButton = setInterval(function(){
 	// console.log("In the interval");
@@ -52,6 +57,7 @@ var addSkipButton = setInterval(function(){
 		skipDiv.appendChild(butt);
 
 		container.appendChild(skipDiv);
+
 		clearInterval(addSkipButton);
 		return;
 	}
@@ -59,6 +65,11 @@ var addSkipButton = setInterval(function(){
 
 var skipper = setInterval(function (){
 	// // console.log("In this one");
+	if(document.getElementsByClassName("style-scope ytd-page-manager hide-skeleton")[0].getAttribute("video-id") != videoId){
+		// console.log("Changed videos");
+		getVideoIdFunc();
+		// console.log("New video ID: " + videoId);
+	}
 	if(typeof document.getElementById("movie_player").getCurrentTime == 'function'){
 		curTime = document.getElementById("movie_player").getCurrentTime();
 		for(var time of skip_times){
