@@ -1,10 +1,6 @@
 api_call = new XMLHttpRequest();
 api_call.onreadystatechange = handleStateChange;
-// url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=";
 var videoId;
-// url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=jasflkdioejf";
-// api_call.open("GET", url, true);
-// api_call.send();
 var skip_times = []
 
 function handleStateChange(){
@@ -23,7 +19,6 @@ function getVideoIdFunc(){
 	if(container.length > 0 && container[0].getAttribute("video-id")!= videoId){		
 		videoId = container[0].getAttribute("video-id");
 		url = "https://blooming-anchorage-23601.herokuapp.com/api/v1/skips?yt_id=" + videoId;
-		// url = url+videoId;
 		api_call.open("GET", url, true);
 		api_call.send();
 		console.log("This video is " + videoId);
@@ -63,17 +58,24 @@ var addSkipButton = setInterval(function(){
 	}
 }, 500);
 
+// Process that checks if the current video time is within a skip. Also updates the videoID if it's different(user has changed videos)
 var skipper = setInterval(function (){
 	// // console.log("In this one");
+	// If the current video is not the same as the previous video
 	if(document.getElementsByClassName("style-scope ytd-page-manager hide-skeleton")[0].getAttribute("video-id") != videoId){
 		// console.log("Changed videos");
 		getVideoIdFunc();
 		// console.log("New video ID: " + videoId);
 	}
+
 	if(typeof document.getElementById("movie_player").getCurrentTime == 'function'){
+
 		curTime = document.getElementById("movie_player").getCurrentTime();
+
 		for(var time of skip_times){
+
 			if(curTime >= time.start && curTime <= time.end){
+
 				skip_butt = document.getElementById('skip_button')
 				skip_butt.style = "display: block; opacity 1;";
 				skip_butt.addEventListener('click', function(){
@@ -82,22 +84,23 @@ var skipper = setInterval(function (){
 				}, once=true);
 				break;
 			} else {
+				
 				document.getElementById('skip_button').style = "display: none; opacity 1;";
 			}
 		}
 	}
 }, 500);
 
+// Places the button to start marking a video via the right-click menu on the video
 var markVideoMenuButton = setInterval(function(){
 	contextMenu = document.getElementsByClassName("ytp-popup ytp-contextmenu");
 	// console.log("Trying to place the button");
 	if (contextMenu.length === 1){
-		console.log("The menu exists! Placing button");
-
+		// console.log("The menu exists! Placing button");
 		ytplayer = document.getElementById("movie_player");
-
 		var startTime;
 
+		// Create the outer div
 		var outer = document.createElement('div');
 		outer.classList = "ytp-menuitem";
 		outer.id = "context-butt";
@@ -105,14 +108,10 @@ var markVideoMenuButton = setInterval(function(){
 			ytplayer = document.getElementById("movie_player");
 			if (startTime == null){
 					startTime = ytplayer.getCurrentTime();
-					// alert("Marking " + startTime + " time as start of non-content")
 					inner1.innerText = "Mark as end";
 			}
 			else{
 					endTime = ytplayer.getCurrentTime();
-					// alert("Marking " + endTime + " time as end of non-content")
-
-					// Can now send both times to the server
 					confirmation = confirm("Sending to server\nVideo ID: " + videoId + "\nStart: " + startTime + "\n End: " + endTime);
 					if(confirmation == true){
 						postToAPI = new XMLHttpRequest();
@@ -127,19 +126,21 @@ var markVideoMenuButton = setInterval(function(){
 			inner2.innerText = "";
 		});
 
+		// Create the first inner div
 		var inner1 = document.createElement('div');
 		inner1.classList = "ytp-menuitem-label";
 		inner1.innerText = "Mark as start of 'non-content'";
 
-		// <div class="ytp-menuitem-content"></div>
+		// Create the second inner div
 		var inner2 = document.createElement('div');
 		inner2.classList = "ytp-menuitem-content";
 		setInterval(function(){inner2.innerText = parseInt(ytplayer.getCurrentTime())}, 500);
 
-
+		// Construct the button
 		outer.appendChild(inner1);
 		outer.appendChild(inner2);
 
+		// Insert the button into youtube's menu
 		var context = document.getElementsByClassName("ytp-panel-menu")[1]
 		context.insertBefore(outer, context.childNodes[0]);
 
