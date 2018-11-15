@@ -34,7 +34,17 @@ function youtube_parser(url){
 //     {urls: ["https://www.youtube.com/watch*"]},
 //     ["blocking"]
 // );
+var userID;
 
 chrome.identity.getProfileUserInfo(function(userInfo) {
     console.log(JSON.stringify(userInfo));
+    userID = userInfo.id;
   });
+
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if (request.action == "getID"){
+            sendResponse({id: userID});
+        }
+    }
+)

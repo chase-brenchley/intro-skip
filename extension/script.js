@@ -2,6 +2,7 @@ api_call = new XMLHttpRequest();
 api_call.onreadystatechange = handleStateChange;
 var videoId;
 var skip_times = []
+var userID = document.currentScript.getAttribute('userID')
 
 function handleStateChange(){
 	skip_times = [];
@@ -14,7 +15,7 @@ function handleStateChange(){
 	}
 }
 
-function getVideoIdFunc(){
+function updateVideoId(){
 	container = document.getElementsByClassName("style-scope ytd-page-manager hide-skeleton");
 	if(container.length > 0 && container[0].getAttribute("video-id")!= videoId){		
 		videoId = container[0].getAttribute("video-id");
@@ -26,7 +27,7 @@ function getVideoIdFunc(){
 	}
 }
 
-var getVideoId = setInterval(getVideoIdFunc, 500);
+var getVideoId = setInterval(updateVideoId, 500);
 
 var addSkipButton = setInterval(function(){
 	// console.log("In the interval");
@@ -62,33 +63,40 @@ var addSkipButton = setInterval(function(){
 var skipper = setInterval(function (){
 	// // console.log("In this one");
 	// If the current video is not the same as the previous video
-	if(document.getElementsByClassName("style-scope ytd-page-manager hide-skeleton")[0].getAttribute("video-id") != videoId){
-		// console.log("Changed videos");
-		getVideoIdFunc();
-		// console.log("New video ID: " + videoId);
+	try {
+		if(document.getElementsByClassName("style-scope ytd-page-manager hide-skeleton")[0].getAttribute("video-id") != videoId){
+			// console.log("Changed videos");
+			updateVideoId();
+			// console.log("New video ID: " + videoId);
+		}
+	} catch(err) {
+		// User isn't watching a video
 	}
 
-	if(typeof document.getElementById("movie_player").getCurrentTime == 'function'){
+	try {
+		if(typeof document.getElementById("movie_player").getCurrentTime == 'function'){
 
-		curTime = document.getElementById("movie_player").getCurrentTime();
+			curTime = document.getElementById("movie_player").getCurrentTime();
 
-		for(var time of skip_times){
+			for(var time of skip_times){
 
-			if(curTime >= time.start && curTime <= time.end){
+				if(curTime >= time.start && curTime <= time.end){
 
-				skip_butt = document.getElementById('skip_button')
-				skip_butt.style = "display: block; opacity 1;";
-				skip_butt.addEventListener('click', function(){
-					document.getElementById("movie_player").seekTo(time.end, true);
-					skip_butt.style = "display: none; opacity 1;";
-				}, once=true);
-				break;
-			} else {
-				
-				document.getElementById('skip_button').style = "display: none; opacity 1;";
+					skip_butt = document.getElementById('skip_button')
+					skip_butt.style = "display: block; opacity 1;";
+					skip_butt.addEventListener('click', function(){
+						document.getElementById("movie_player").seekTo(time.end, true);
+						skip_butt.style = "display: none; opacity 1;";
+					}, once=true);
+					break;
+				} else {
+					
+					document.getElementById('skip_button').style = "display: none; opacity 1;";
+				}
 			}
 		}
 	}
+	catch(err){}
 }, 500);
 
 // Places the button to start marking a video via the right-click menu on the video
